@@ -202,7 +202,36 @@
   color: var(--text);
 }
 
-/* Expert contact section */
+/* Experts section by region */
+.experts-intro {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.expert-region {
+  margin-bottom: 2rem;
+}
+
+.expert-region:last-child {
+  margin-bottom: 0;
+}
+
+.expert-region-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
 .expert-card {
   display: flex;
   align-items: center;
@@ -211,6 +240,12 @@
   border-radius: 12px;
   background: var(--card-bg);
   border: 1px solid var(--border);
+}
+
+.expert-soon {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .expert-photo {
@@ -368,6 +403,10 @@
   }
 
   .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .experts-grid {
     grid-template-columns: 1fr;
   }
 

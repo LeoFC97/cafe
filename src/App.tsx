@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { fetchHomeInformation } from "./api";
 import { usePriceHistory } from "./hooks/usePriceHistory";
 import { PriceChart } from "./components/PriceChart";
+import { expertsByRegion } from "./data/experts";
+import type { Expert } from "./data/experts";
 import type { HomeInformation, Stock, Value, Message } from "./types/api";
 import "./App.css";
 
@@ -51,11 +53,62 @@ function MessageItem({ m }: { m: Message }) {
   );
 }
 
+function ExpertCard({
+  expert,
+  onScheduleClick,
+}: {
+  expert: Expert;
+  onScheduleClick: (expert: Expert) => void;
+}) {
+  const isPlaceholder = expert.whatsapp === "#";
+  const photoSrc = expert.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(expert.name)}&size=200&background=2a2a2a&color=888`;
+
+  return (
+    <div className="expert-card">
+      <img
+        src={expert.photo || photoSrc}
+        alt={expert.name}
+        className="expert-photo"
+        onError={(e) => {
+          const target = e.currentTarget;
+          target.onerror = null;
+          target.src = photoSrc;
+        }}
+      />
+      <div className="expert-info">
+        <h3 className="expert-name">{expert.name}</h3>
+        <p className="expert-role">{expert.role}</p>
+        <div className="expert-contact">
+          {!isPlaceholder && (
+            <>
+              <a href={`mailto:${expert.email}`} className="expert-link">
+                {expert.email}
+              </a>
+              <a
+                href={expert.whatsapp.startsWith("55") ? `https://wa.me/${expert.whatsapp}` : expert.whatsapp}
+                className="expert-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp: {expert.whatsappDisplay}
+              </a>
+              <button type="button" className="expert-btn-schedule" onClick={() => onScheduleClick(expert)}>
+                Ver horários disponíveis
+              </button>
+            </>
+          )}
+          {isPlaceholder && <span className="expert-soon">Contato em breve</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [data, setData] = useState<HomeInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [scheduleModalExpert, setScheduleModalExpert] = useState<Expert | null>(null);
   const { history, append } = usePriceHistory();
 
   const load = async () => {
@@ -97,48 +150,36 @@ export default function App() {
 
       {error && <div className="banner error">{error}</div>}
 
-      <section className="section expert">
+      <section className="section experts">
         <h2>Entrar em contato com um especialista</h2>
-        <div className="expert-card">
-          <img
-            src="/bruno-pestana.png"
-            alt="Bruno Pestana"
-            className="expert-photo"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.onerror = null;
-              target.src = `https://ui-avatars.com/api/?name=Bruno+Pestana&size=200&background=c4a35a&color=fff`;
-            }}
-          />
-          <div className="expert-info">
-            <h3 className="expert-name">Bruno Pestana</h3>
-            <p className="expert-role">Especialista em mercado de café</p>
-            <div className="expert-contact">
-              <a href="mailto:contato@paineldocafe.com.br" className="expert-link">
-                contato@paineldocafe.com.br
-              </a>
-              <a href="https://wa.me/5522998670162" className="expert-link" target="_blank" rel="noopener noreferrer">
-                WhatsApp: (22) 99867-0162
-              </a>
-              <button type="button" className="expert-btn-schedule" onClick={() => setScheduleModalOpen(true)}>
-                Ver horários disponíveis
-              </button>
+        <p className="experts-intro">Encontre um consultor por região:</p>
+        {expertsByRegion.map(({ region, specialists }) => (
+          <div key={region} className="expert-region">
+            <h3 className="expert-region-title">{region}</h3>
+            <div className="experts-grid">
+              {specialists.map((expert) => (
+                <ExpertCard
+                  key={expert.id}
+                  expert={expert}
+                  onScheduleClick={setScheduleModalExpert}
+                />
+              ))}
             </div>
           </div>
-        </div>
+        ))}
       </section>
 
-      {scheduleModalOpen && (
-        <div className="modal-overlay" onClick={() => setScheduleModalOpen(false)}>
+      {scheduleModalExpert && (
+        <div className="modal-overlay" onClick={() => setScheduleModalExpert(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Horários disponíveis</h3>
-              <button type="button" className="modal-close" onClick={() => setScheduleModalOpen(false)} aria-label="Fechar">
+              <button type="button" className="modal-close" onClick={() => setScheduleModalExpert(null)} aria-label="Fechar">
                 ×
               </button>
             </div>
             <div className="modal-body">
-              <p className="modal-placeholder">Atendimento com Bruno Pestana</p>
+              <p className="modal-placeholder">Atendimento com {scheduleModalExpert.name}</p>
               <ul className="modal-slots">
                 <li>Segunda a Sexta: 9h às 12h e 14h às 18h</li>
                 <li>Sábado: 9h às 13h (placeholder)</li>
