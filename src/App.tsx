@@ -17,10 +17,10 @@ function formatDate(s: string): string {
   return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
 
-function StockCard({ s }: { s: Stock }) {
+function StockCard({ s, secondary }: { s: Stock; secondary?: boolean }) {
   const isMoney = s.type === "money";
   return (
-    <div className={`card stock ${s.movement}`}>
+    <div className={`card stock ${s.movement} ${secondary ? "stock--secondary" : ""}`}>
       <div className="stock-header">
         <span className="stock-name">{s.name}</span>
         {s.market_strip && <span className="stock-strip">{s.market_strip}</span>}
@@ -141,13 +141,12 @@ function ExpertCard({
   );
 }
 
-type TabId = "mercado" | "clima" | "noticias" | "chat" | "especialistas" | "parceiros";
+type TabId = "mercado" | "clima" | "noticias" | "especialistas" | "parceiros";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "mercado", label: "Mercado" },
   { id: "clima", label: "Previsão do tempo" },
   { id: "noticias", label: "Notícias" },
-  { id: "chat", label: "Chat" },
   { id: "especialistas", label: "Contato com especialista" },
   { id: "parceiros", label: "Marcas parceiras" },
 ];
@@ -165,6 +164,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>("mercado");
   const [scheduleModalExpert, setScheduleModalExpert] = useState<Expert | null>(null);
   const [chatMessage, setChatMessage] = useState(CHAT_DEFAULT_MESSAGE);
+  const [chatPopoutOpen, setChatPopoutOpen] = useState(false);
 
   const load = async () => {
     try {
@@ -221,14 +221,30 @@ export default function App() {
       {activeTab === "mercado" && (
         <>
           {data && (
-            <section className="section section--highlight stocks">
-              <h2 className="stocks-heading">Cotações</h2>
-              <div className="stocks-grid">
-                {data.stocks.map((s) => (
-                  <StockCard key={s.id} s={s} />
-                ))}
-              </div>
-            </section>
+            <>
+              <section className="section section--highlight stocks">
+                <h2 className="stocks-heading">Café (bolsas)</h2>
+                <div className="stocks-grid">
+                  {data.stocks
+                    .filter((s) => s.type === "coffee")
+                    .map((s) => (
+                      <StockCard key={s.id} s={s} />
+                    ))}
+                </div>
+              </section>
+              {data.stocks.some((s) => s.type === "money") && (
+                <section className="section stocks-cambio">
+                  <h2 className="stocks-cambio-heading">Câmbio</h2>
+                  <div className="stocks-grid stocks-grid--secondary">
+                    {data.stocks
+                      .filter((s) => s.type === "money")
+                      .map((s) => (
+                        <StockCard key={s.id} s={s} secondary />
+                      ))}
+                  </div>
+                </section>
+              )}
+            </>
           )}
 
           {data && (
@@ -262,36 +278,6 @@ export default function App() {
           ) : (
             <p className="weather-loading">Carregando notícias...</p>
           )}
-        </section>
-      )}
-
-      {activeTab === "chat" && brunoPestana && (
-        <section className="section chat">
-          <h2>Fale com o especialista</h2>
-          <p className="chat-intro">
-            Envie sua pergunta pelo WhatsApp para <strong>{brunoPestana.name}</strong> ({brunoPestana.whatsappDisplay}). A mensagem será aberta no WhatsApp com o texto abaixo — você pode editar antes de enviar.
-          </p>
-          <div className="chat-form">
-            <label htmlFor="chat-message" className="chat-label">
-              Sua mensagem
-            </label>
-            <textarea
-              id="chat-message"
-              className="chat-textarea"
-              rows={5}
-              placeholder="Digite sua dúvida ou mensagem..."
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-            />
-            <a
-              href={`https://wa.me/${brunoPestana.whatsapp}?text=${encodeURIComponent(chatMessage)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="chat-btn"
-            >
-              Abrir no WhatsApp
-            </a>
-          </div>
         </section>
       )}
 
@@ -346,6 +332,53 @@ export default function App() {
               <p className="modal-note">Entre em contato pelo WhatsApp para agendar seu horário.</p>
             </div>
           </div>
+        </div>
+      )}
+
+      {brunoPestana && (
+        <div className="chat-popout">
+          {chatPopoutOpen && (
+            <div className="chat-popout-panel">
+              <div className="chat-popout-header">
+                <span>Fale com {brunoPestana.name}</span>
+                <button
+                  type="button"
+                  className="chat-popout-close"
+                  onClick={() => setChatPopoutOpen(false)}
+                  aria-label="Fechar"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="chat-popout-intro">
+                Sua mensagem será aberta no WhatsApp. Edite abaixo se quiser.
+              </p>
+              <textarea
+                className="chat-popout-textarea"
+                rows={4}
+                placeholder="Sua mensagem..."
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+              />
+              <a
+                href={`https://wa.me/${brunoPestana.whatsapp}?text=${encodeURIComponent(chatMessage)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="chat-popout-btn"
+              >
+                Abrir no WhatsApp
+              </a>
+            </div>
+          )}
+          <button
+            type="button"
+            className="chat-popout-toggle"
+            onClick={() => setChatPopoutOpen((o) => !o)}
+            aria-label={chatPopoutOpen ? "Fechar chat" : "Abrir chat"}
+            title="Fale com o especialista"
+          >
+            {chatPopoutOpen ? "×" : "Chat"}
+          </button>
         </div>
       )}
     </div>

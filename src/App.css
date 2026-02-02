@@ -147,6 +147,48 @@
   font-size: 1.05rem;
 }
 
+/* Câmbio (secundário) */
+.stocks-cambio {
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.stocks-cambio-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+
+.stocks-grid--secondary {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.card.stock.stock--secondary {
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.card.stock.stock--secondary .stock-name {
+  font-size: 0.85rem;
+}
+
+.card.stock.stock--secondary .stock-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.card.stock.stock--secondary .stock-meta {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
 .card.stock.up .stock-change { color: var(--up); }
 .card.stock.down .stock-change { color: var(--down); }
 
@@ -525,6 +567,129 @@
 
 .chat-btn:active {
   transform: scale(0.98);
+}
+
+/* Chat pop-out (canto inferior esquerdo) */
+.chat-popout {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.chat-popout-panel {
+  width: 320px;
+  max-width: calc(100vw - 2.5rem);
+  padding: 0;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.chat-popout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  background: rgba(196, 163, 90, 0.15);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.chat-popout-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.chat-popout-close:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.chat-popout-intro {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.chat-popout-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg);
+  border: none;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.chat-popout-textarea::placeholder {
+  color: var(--muted);
+}
+
+.chat-popout-textarea:focus {
+  outline: none;
+}
+
+.chat-popout-btn {
+  display: block;
+  text-align: center;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: #25d366;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.chat-popout-btn:hover {
+  background: #20bd5a;
+}
+
+.chat-popout-toggle {
+  padding: 0.65rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.chat-popout-toggle:hover {
+  border-color: var(--accent);
+  background: rgba(196, 163, 90, 0.12);
 }
 
 /* Modal */
