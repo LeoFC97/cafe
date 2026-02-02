@@ -3,7 +3,9 @@ import { fetchHomeInformation } from "./api";
 import { usePriceHistory } from "./hooks/usePriceHistory";
 import { PriceChart } from "./components/PriceChart";
 import { expertsByRegion } from "./data/experts";
+import { partners } from "./data/partners";
 import type { Expert } from "./data/experts";
+import type { Partner } from "./data/partners";
 import type { HomeInformation, Stock, Value, Message } from "./types/api";
 import "./App.css";
 
@@ -51,6 +53,39 @@ function MessageItem({ m }: { m: Message }) {
       <p className="message-text">{m.text}</p>
     </article>
   );
+}
+
+function PartnerCard({ partner }: { partner: Partner }) {
+  const [logoFailed, setLogoFailed] = useState(false);
+  const showLogo = partner.logo && !logoFailed;
+  const content = (
+    <>
+      {showLogo ? (
+        <img
+          src={partner.logo}
+          alt={partner.name}
+          className="partner-logo"
+          onError={() => setLogoFailed(true)}
+        />
+      ) : (
+        <span className="partner-name">{partner.name}</span>
+      )}
+    </>
+  );
+
+  if (partner.url) {
+    return (
+      <a
+        href={partner.url}
+        className="partner-card"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {content}
+      </a>
+    );
+  }
+  return <div className="partner-card partner-card--no-link">{content}</div>;
 }
 
 function ExpertCard({
@@ -104,11 +139,12 @@ function ExpertCard({
   );
 }
 
-type TabId = "mercado" | "especialistas";
+type TabId = "mercado" | "especialistas" | "parceiros";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "mercado", label: "Mercado" },
   { id: "especialistas", label: "Contato com especialista" },
+  { id: "parceiros", label: "Marcas parceiras" },
 ];
 
 export default function App() {
@@ -256,6 +292,18 @@ export default function App() {
               </div>
             </div>
           ))}
+        </section>
+      )}
+
+      {activeTab === "parceiros" && (
+        <section className="section partners">
+          <h2>Marcas parceiras</h2>
+          <p className="partners-intro">Empresas que apoiam o Painel do Café.</p>
+          <div className="partners-grid">
+            {partners.map((partner) => (
+              <PartnerCard key={partner.id} partner={partner} />
+            ))}
+          </div>
         </section>
       )}
 
