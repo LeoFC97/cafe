@@ -458,6 +458,75 @@
   flex: 1;
 }
 
+/* Chat (WhatsApp) */
+.chat-intro {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.chat-intro strong {
+  color: var(--accent);
+}
+
+.chat-form {
+  max-width: 480px;
+}
+
+.chat-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.chat-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.chat-textarea::placeholder {
+  color: var(--muted);
+}
+
+.chat-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.chat-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #25d366;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.chat-btn:hover {
+  background: #20bd5a;
+}
+
+.chat-btn:active {
+  transform: scale(0.98);
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;

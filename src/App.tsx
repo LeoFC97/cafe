@@ -141,15 +141,22 @@ function ExpertCard({
   );
 }
 
-type TabId = "mercado" | "clima" | "noticias" | "especialistas" | "parceiros";
+type TabId = "mercado" | "clima" | "noticias" | "chat" | "especialistas" | "parceiros";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "mercado", label: "Mercado" },
   { id: "clima", label: "Previsão do tempo" },
   { id: "noticias", label: "Notícias" },
+  { id: "chat", label: "Chat" },
   { id: "especialistas", label: "Contato com especialista" },
   { id: "parceiros", label: "Marcas parceiras" },
 ];
+
+const CHAT_DEFAULT_MESSAGE = "Olá Bruno, gostaria de falar com um especialista sobre o mercado de café. Minha dúvida: ";
+
+const brunoPestana = expertsByRegion
+  .flatMap((r) => r.specialists)
+  .find((e) => e.id === "bruno-pestana");
 
 export default function App() {
   const [data, setData] = useState<HomeInformation | null>(null);
@@ -157,6 +164,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("mercado");
   const [scheduleModalExpert, setScheduleModalExpert] = useState<Expert | null>(null);
+  const [chatMessage, setChatMessage] = useState(CHAT_DEFAULT_MESSAGE);
 
   const load = async () => {
     try {
@@ -254,6 +262,36 @@ export default function App() {
           ) : (
             <p className="weather-loading">Carregando notícias...</p>
           )}
+        </section>
+      )}
+
+      {activeTab === "chat" && brunoPestana && (
+        <section className="section chat">
+          <h2>Fale com o especialista</h2>
+          <p className="chat-intro">
+            Envie sua pergunta pelo WhatsApp para <strong>{brunoPestana.name}</strong> ({brunoPestana.whatsappDisplay}). A mensagem será aberta no WhatsApp com o texto abaixo — você pode editar antes de enviar.
+          </p>
+          <div className="chat-form">
+            <label htmlFor="chat-message" className="chat-label">
+              Sua mensagem
+            </label>
+            <textarea
+              id="chat-message"
+              className="chat-textarea"
+              rows={5}
+              placeholder="Digite sua dúvida ou mensagem..."
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+            />
+            <a
+              href={`https://wa.me/${brunoPestana.whatsapp}?text=${encodeURIComponent(chatMessage)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chat-btn"
+            >
+              Abrir no WhatsApp
+            </a>
+          </div>
         </section>
       )}
 
