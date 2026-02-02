@@ -25,6 +25,47 @@
   color: var(--muted);
 }
 
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tabs-btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.tabs-btn:hover {
+  color: var(--text);
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+
+.tabs-btn--active {
+  color: var(--accent);
+  background: rgba(196, 163, 90, 0.12);
+  border-color: rgba(196, 163, 90, 0.4);
+}
+
+.tabs-btn--active:hover {
+  color: var(--accent);
+  background: rgba(196, 163, 90, 0.18);
+  border-color: var(--accent);
+}
+
 .banner.error {
   background: var(--error-bg);
   color: var(--error);
@@ -457,5 +498,15 @@
 
   .expert-contact {
     align-items: center;
+  }
+
+  .tabs {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+  }
+
+  .tabs-btn {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
   }
 }

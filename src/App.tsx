@@ -104,10 +104,18 @@ function ExpertCard({
   );
 }
 
+type TabId = "mercado" | "especialistas";
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: "mercado", label: "Mercado" },
+  { id: "especialistas", label: "Contato com especialista" },
+];
+
 export default function App() {
   const [data, setData] = useState<HomeInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabId>("mercado");
   const [scheduleModalExpert, setScheduleModalExpert] = useState<Expert | null>(null);
   const { history, append } = usePriceHistory();
 
@@ -146,39 +154,110 @@ export default function App() {
       <header className="header">
         <h1>Painel do Café</h1>
         <p className="tagline">Cotações e notícias do mercado</p>
+        <nav className="tabs" role="tablist">
+          {TABS.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === id}
+              className={`tabs-btn ${activeTab === id ? "tabs-btn--active" : ""}`}
+              onClick={() => setActiveTab(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       {error && <div className="banner error">{error}</div>}
 
-      {data && (
-        <section className="section section--highlight stocks">
-          <h2 className="stocks-heading">Cotações</h2>
-          <div className="stocks-grid">
-            {data.stocks.map((s) => (
-              <StockCard key={s.id} s={s} />
-            ))}
-          </div>
-        </section>
+      {activeTab === "mercado" && (
+        <>
+          {data && (
+            <section className="section section--highlight stocks">
+              <h2 className="stocks-heading">Cotações</h2>
+              <div className="stocks-grid">
+                {data.stocks.map((s) => (
+                  <StockCard key={s.id} s={s} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {data && (
+            <>
+              <section className="section values">
+                <h2>Preços físicos (R$/saca)</h2>
+                <div className="values-grid">
+                  {data.values.map((v) => (
+                    <ValueCard key={v.name} v={v} />
+                  ))}
+                </div>
+              </section>
+
+              {history.length >= 2 && (
+                <section className="section history">
+                  <h2>Histórico (sessão)</h2>
+                  <p className="history-note">Dados acumulados nesta visita. Atualize a página para ver novos pontos.</p>
+                  <div className="charts">
+                    {data.stocks.filter((s) => s.type === "coffee").map((s) => (
+                      <PriceChart
+                        key={s.symbol}
+                        history={history}
+                        series="stock"
+                        keyId={s.symbol}
+                        label={s.name}
+                        formatValue={(n) => formatPrice(n, 0)}
+                      />
+                    ))}
+                    {data.values.map((v) => (
+                      <PriceChart
+                        key={v.name}
+                        history={history}
+                        series="value"
+                        keyId={v.name}
+                        label={v.name}
+                        formatValue={(n) => `R$ ${formatPrice(n)}`}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              <section className="section messages">
+                <h2>Notícias e alertas</h2>
+                <div className="messages-list">
+                  {data.messages.slice(0, 30).map((m) => (
+                    <MessageItem key={m.id} m={m} />
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+        </>
       )}
 
-      <section className="section experts">
-        <h2>Entrar em contato com um especialista</h2>
-        <p className="experts-intro">Encontre um consultor por região:</p>
-        {expertsByRegion.map(({ region, specialists }) => (
-          <div key={region} className="expert-region">
-            <h3 className="expert-region-title">{region}</h3>
-            <div className="experts-grid">
-              {specialists.map((expert) => (
-                <ExpertCard
-                  key={expert.id}
-                  expert={expert}
-                  onScheduleClick={setScheduleModalExpert}
-                />
-              ))}
+      {activeTab === "especialistas" && (
+        <section className="section experts">
+          <h2>Contato com especialista</h2>
+          <p className="experts-intro">Encontre um consultor por região:</p>
+          {expertsByRegion.map(({ region, specialists }) => (
+            <div key={region} className="expert-region">
+              <h3 className="expert-region-title">{region}</h3>
+              <div className="experts-grid">
+                {specialists.map((expert) => (
+                  <ExpertCard
+                    key={expert.id}
+                    expert={expert}
+                    onScheduleClick={setScheduleModalExpert}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </section>
+          ))}
+        </section>
+      )}
 
       {scheduleModalExpert && (
         <div className="modal-overlay" onClick={() => setScheduleModalExpert(null)}>
@@ -199,57 +278,6 @@ export default function App() {
             </div>
           </div>
         </div>
-      )}
-
-      {data && (
-        <>
-          <section className="section values">
-            <h2>Preços físicos (R$/saca)</h2>
-            <div className="values-grid">
-              {data.values.map((v) => (
-                <ValueCard key={v.name} v={v} />
-              ))}
-            </div>
-          </section>
-
-          {history.length >= 2 && (
-            <section className="section history">
-              <h2>Histórico (sessão)</h2>
-              <p className="history-note">Dados acumulados nesta visita. Atualize a página para ver novos pontos.</p>
-              <div className="charts">
-                {data.stocks.filter((s) => s.type === "coffee").map((s) => (
-                  <PriceChart
-                    key={s.symbol}
-                    history={history}
-                    series="stock"
-                    keyId={s.symbol}
-                    label={s.name}
-                    formatValue={(n) => formatPrice(n, 0)}
-                  />
-                ))}
-                {data.values.map((v) => (
-                  <PriceChart
-                    key={v.name}
-                    history={history}
-                    series="value"
-                    keyId={v.name}
-                    label={v.name}
-                    formatValue={(n) => `R$ ${formatPrice(n)}`}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section className="section messages">
-            <h2>Notícias e alertas</h2>
-            <div className="messages-list">
-              {data.messages.slice(0, 30).map((m) => (
-                <MessageItem key={m.id} m={m} />
-              ))}
-            </div>
-          </section>
-        </>
       )}
     </div>
   );
