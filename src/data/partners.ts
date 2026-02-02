@@ -11,6 +11,7 @@ export const partners: Partner[] = [
     id: "ellepot",
     name: "Ellepot",
     description: "Sistema integrado de plantio com máquinas, papéis biodegradáveis e bandejas para propagação de mudas. Atua em silvicultura, ornamentais, legumes, frutas e outras culturas, incluindo café.",
+    logo: "/partners/ellepot.png",
     url: "https://www.ellepot.com/pt",
   },
   {

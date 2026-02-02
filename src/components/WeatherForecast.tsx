@@ -26,6 +26,21 @@ function formatHour(iso: string): string {
   });
 }
 
+function formatSunshineDuration(seconds: number): string {
+  const hours = Math.round(seconds / 3600);
+  const min = Math.round((seconds % 3600) / 60);
+  if (hours >= 1) return `${hours} h${min > 0 ? ` ${min} min` : ""}`;
+  return `${Math.round(seconds / 60)} min`;
+}
+
+function formatSunTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function WeatherForecast() {
   const [weather, setWeather] = useState<WeatherForecastType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -169,15 +184,27 @@ export function WeatherForecast() {
                     Chuva: {day.precipitation} mm
                   </span>
                 )}
+                <span className="weather-day-extra">
+                  UV máx.: {day.uvIndexMax.toFixed(1)}
+                </span>
+                <span className="weather-day-extra">
+                  Sol: {formatSunshineDuration(day.sunshineDurationSeconds)}
+                </span>
+                <span className="weather-day-extra">
+                  Nascer: {formatSunTime(day.sunrise)}
+                </span>
+                <span className="weather-day-extra">
+                  Pôr do sol: {formatSunTime(day.sunset)}
+                </span>
               </div>
             ))}
           </div>
 
           <h3 className="weather-detail-title">
-            Detalhamento por hora (temperatura e chuva)
+            Detalhamento por hora (temperatura, chuva, radiação solar e UV)
           </h3>
           <p className="weather-detail-note">
-            Próximas 24 horas — temperatura em °C, chuva em mm
+            Próximas 24 horas — temp. (°C), chuva (mm), radiação (W/m²), índice UV
           </p>
           <div className="weather-hourly-wrap">
             <div className="weather-hourly">
@@ -187,6 +214,12 @@ export function WeatherForecast() {
                   <span className="weather-hour-temp">{Math.round(h.temp)}°</span>
                   <span className="weather-hour-precip">
                     {h.precipitation > 0 ? `${h.precipitation} mm` : "—"}
+                  </span>
+                  <span className="weather-hour-solar" title="Radiação solar">
+                    {h.shortwaveRadiation > 0 ? `${Math.round(h.shortwaveRadiation)} W/m²` : "—"}
+                  </span>
+                  <span className="weather-hour-uv" title="Índice UV">
+                    UV {h.uvIndex > 0 ? h.uvIndex.toFixed(1) : "—"}
                   </span>
                 </div>
               ))}

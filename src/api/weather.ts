@@ -20,12 +20,18 @@ export interface WeatherForecastDay {
   tempMin: number;
   precipitation: number;
   weatherCode: number;
+  uvIndexMax: number;
+  sunshineDurationSeconds: number;
+  sunrise: string; // ISO
+  sunset: string;  // ISO
 }
 
 export interface WeatherForecastHour {
   time: string; // ISO
   temp: number;
   precipitation: number;
+  shortwaveRadiation: number; // W/m²
+  uvIndex: number;
 }
 
 export interface WeatherForecast {
@@ -65,8 +71,14 @@ export async function fetchWeatherForecast(
   url.searchParams.set("longitude", String(lon));
   url.searchParams.set("timezone", timezone);
   url.searchParams.set("forecast_days", String(days));
-  url.searchParams.set("daily", "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code");
-  url.searchParams.set("hourly", "temperature_2m,precipitation");
+  url.searchParams.set(
+    "daily",
+    "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,uv_index_max,sunshine_duration,sunrise,sunset"
+  );
+  url.searchParams.set(
+    "hourly",
+    "temperature_2m,precipitation,shortwave_radiation,uv_index"
+  );
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error("Falha ao buscar previsão do tempo");
@@ -77,11 +89,17 @@ export async function fetchWeatherForecast(
       temperature_2m_min: number[];
       precipitation_sum: number[];
       weather_code: number[];
+      uv_index_max: number[];
+      sunshine_duration: number[];
+      sunrise: string[];
+      sunset: string[];
     };
     hourly: {
       time: string[];
       temperature_2m: number[];
       precipitation: number[];
+      shortwave_radiation: number[];
+      uv_index: number[];
     };
   };
 
@@ -91,12 +109,18 @@ export async function fetchWeatherForecast(
     tempMin: json.daily.temperature_2m_min[i],
     precipitation: json.daily.precipitation_sum[i],
     weatherCode: json.daily.weather_code[i],
+    uvIndexMax: json.daily.uv_index_max[i],
+    sunshineDurationSeconds: json.daily.sunshine_duration[i],
+    sunrise: json.daily.sunrise[i],
+    sunset: json.daily.sunset[i],
   }));
 
   const hourly = json.hourly.time.map((time, i) => ({
     time,
     temp: json.hourly.temperature_2m[i],
     precipitation: json.hourly.precipitation[i],
+    shortwaveRadiation: json.hourly.shortwave_radiation[i],
+    uvIndex: json.hourly.uv_index[i],
   }));
 
   return { location: locationName, timezone, daily, hourly };
