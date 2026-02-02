@@ -55,6 +55,7 @@ export default function App() {
   const [data, setData] = useState<HomeInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const { history, append } = usePriceHistory();
 
   const load = async () => {
@@ -95,6 +96,58 @@ export default function App() {
       </header>
 
       {error && <div className="banner error">{error}</div>}
+
+      <section className="section expert">
+        <h2>Entrar em contato com um especialista</h2>
+        <div className="expert-card">
+          <img
+            src="/bruno-pestana.png"
+            alt="Bruno Pestana"
+            className="expert-photo"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.onerror = null;
+              target.src = `https://ui-avatars.com/api/?name=Bruno+Pestana&size=200&background=c4a35a&color=fff`;
+            }}
+          />
+          <div className="expert-info">
+            <h3 className="expert-name">Bruno Pestana</h3>
+            <p className="expert-role">Especialista em mercado de café</p>
+            <div className="expert-contact">
+              <a href="mailto:contato@paineldocafe.com.br" className="expert-link">
+                contato@paineldocafe.com.br
+              </a>
+              <a href="https://wa.me/5522998670162" className="expert-link" target="_blank" rel="noopener noreferrer">
+                WhatsApp: (22) 99867-0162
+              </a>
+              <button type="button" className="expert-btn-schedule" onClick={() => setScheduleModalOpen(true)}>
+                Ver horários disponíveis
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {scheduleModalOpen && (
+        <div className="modal-overlay" onClick={() => setScheduleModalOpen(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Horários disponíveis</h3>
+              <button type="button" className="modal-close" onClick={() => setScheduleModalOpen(false)} aria-label="Fechar">
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-placeholder">Atendimento com Bruno Pestana</p>
+              <ul className="modal-slots">
+                <li>Segunda a Sexta: 9h às 12h e 14h às 18h</li>
+                <li>Sábado: 9h às 13h (placeholder)</li>
+              </ul>
+              <p className="modal-note">Entre em contato pelo WhatsApp para agendar seu horário.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {data && (
         <>
