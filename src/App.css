@@ -524,6 +524,63 @@
   color: var(--muted);
 }
 
+/* Previsão do tempo */
+.weather-location {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.weather-loading,
+.weather-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.weather-error {
+  color: var(--error);
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.weather-day {
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.weather-day-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.weather-day-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.weather-day-temps {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.weather-day-precip {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
 @media (max-width: 600px) {
   .app {
     padding: 0.75rem 1rem 2rem;
@@ -562,6 +619,10 @@
   .tabs-btn {
     padding: 0.45rem 1rem;
     font-size: 0.85rem;
+  }
+
+  .weather-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 
   .partners-grid {

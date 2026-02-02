@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchHomeInformation } from "./api";
 import { usePriceHistory } from "./hooks/usePriceHistory";
 import { PriceChart } from "./components/PriceChart";
+import { WeatherForecast } from "./components/WeatherForecast";
 import { expertsByRegion } from "./data/experts";
 import { partners } from "./data/partners";
 import type { Expert } from "./data/experts";
@@ -271,6 +272,8 @@ export default function App() {
               </section>
             </>
           )}
+
+          <WeatherForecast />
         </>
       )}
 

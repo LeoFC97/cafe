@@ -58,3 +58,5 @@ No env vars or extra config are required; the app only calls the public coffee A
 Data is fetched from `https://api.coffee-panel.mitrix.online/api/home/information` (same as paineldocafe.com.br). The app refreshes every 60 seconds.
 
 Historical data is **client-side only**: each time data is fetched, a snapshot is saved to `localStorage`. The “Histórico (sessão)” section shows sparklines for coffee stocks and physical values once at least 2 points exist (e.g. after the second refresh or a revisit).
+
+**Weather:** Open-Meteo (no API key) provides a 5-day forecast for Vitória/ES. See **[docs/FONTES-DADOS.md](docs/FONTES-DADOS.md)** for where to get **historical coffee price data** (e.g. FRED API) and more details on data sources.
