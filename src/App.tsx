@@ -150,6 +150,17 @@ export default function App() {
 
       {error && <div className="banner error">{error}</div>}
 
+      {data && (
+        <section className="section section--highlight stocks">
+          <h2 className="stocks-heading">Cotações</h2>
+          <div className="stocks-grid">
+            {data.stocks.map((s) => (
+              <StockCard key={s.id} s={s} />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="section experts">
         <h2>Entrar em contato com um especialista</h2>
         <p className="experts-intro">Encontre um consultor por região:</p>
@@ -192,15 +203,6 @@ export default function App() {
 
       {data && (
         <>
-          <section className="section stocks">
-            <h2>Cotações</h2>
-            <div className="stocks-grid">
-              {data.stocks.map((s) => (
-                <StockCard key={s.id} s={s} />
-              ))}
-            </div>
-          </section>
-
           <section className="section values">
             <h2>Preços físicos (R$/saca)</h2>
             <div className="values-grid">

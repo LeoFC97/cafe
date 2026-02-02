@@ -22,7 +22,7 @@ export const expertsByRegion: ExpertRegion[] = [
         name: "Bruno Pestana",
         role: "Especialista em mercado de café",
         photo: "/bruno-pestana.png",
-        email: "contato@paineldocafe.com.br",
+        email: "brpestana@gmail.com",
         whatsapp: "5522998670162",
         whatsappDisplay: "(22) 99867-0162",
       },

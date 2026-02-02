@@ -53,10 +53,34 @@
   margin: 0 0 0.75rem;
 }
 
+/* Cotação em destaque */
+.section--highlight {
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(196, 163, 90, 0.12) 0%, rgba(196, 163, 90, 0.04) 100%);
+  border: 1px solid rgba(196, 163, 90, 0.35);
+}
+
+.section--highlight .stocks-heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.25rem;
+}
+
 .stocks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.section--highlight .stocks-grid {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
 }
 
 .card.stock {
@@ -64,6 +88,22 @@
   border-radius: 12px;
   background: var(--card-bg);
   border: 1px solid var(--border);
+}
+
+.section--highlight .card.stock {
+  padding: 1.25rem 1.5rem;
+  background: var(--bg);
+  border-color: var(--border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section--highlight .stock-price {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.section--highlight .stock-name {
+  font-size: 1.05rem;
 }
 
 .card.stock.up .stock-change { color: var(--up); }
