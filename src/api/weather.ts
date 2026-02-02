@@ -1,10 +1,18 @@
 /**
  * Open-Meteo: https://open-meteo.com/en/docs
- * Sem API key. Região padrão: Vitória/ES (área cafeeira).
+ * Geocoding: https://geocoding-api.open-meteo.com/v1/search
+ * Sem API key.
  */
-const DEFAULT_LAT = -20.3;
-const DEFAULT_LON = -40.3;
-const TIMEZONE = "America/Sao_Paulo";
+
+export interface GeoResult {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  country_code: string;
+  admin1?: string;
+  timezone: string;
+}
 
 export interface WeatherForecastDay {
   date: string;
@@ -14,18 +22,51 @@ export interface WeatherForecastDay {
   weatherCode: number;
 }
 
-export interface WeatherForecast {
-  location: string;
-  daily: WeatherForecastDay[];
+export interface WeatherForecastHour {
+  time: string; // ISO
+  temp: number;
+  precipitation: number;
 }
 
-export async function fetchWeatherForecast(days = 5): Promise<WeatherForecast> {
+export interface WeatherForecast {
+  location: string;
+  timezone: string;
+  daily: WeatherForecastDay[];
+  hourly: WeatherForecastHour[];
+}
+
+const DEFAULT_LAT = -20.3;
+const DEFAULT_LON = -40.3;
+const DEFAULT_TIMEZONE = "America/Sao_Paulo";
+const DEFAULT_LOCATION = "Vitória, ES";
+
+export async function searchCities(query: string): Promise<GeoResult[]> {
+  if (!query.trim()) return [];
+  const url = new URL("https://geocoding-api.open-meteo.com/v1/search");
+  url.searchParams.set("name", query.trim());
+  url.searchParams.set("count", "10");
+  url.searchParams.set("language", "pt");
+
+  const res = await fetch(url.toString());
+  if (!res.ok) return [];
+  const json = (await res.json()) as { results?: GeoResult[] };
+  return json.results ?? [];
+}
+
+export async function fetchWeatherForecast(
+  lat: number = DEFAULT_LAT,
+  lon: number = DEFAULT_LON,
+  timezone: string = DEFAULT_TIMEZONE,
+  locationName: string = DEFAULT_LOCATION,
+  days = 5
+): Promise<WeatherForecast> {
   const url = new URL("https://api.open-meteo.com/v1/forecast");
-  url.searchParams.set("latitude", String(DEFAULT_LAT));
-  url.searchParams.set("longitude", String(DEFAULT_LON));
-  url.searchParams.set("timezone", TIMEZONE);
+  url.searchParams.set("latitude", String(lat));
+  url.searchParams.set("longitude", String(lon));
+  url.searchParams.set("timezone", timezone);
   url.searchParams.set("forecast_days", String(days));
   url.searchParams.set("daily", "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code");
+  url.searchParams.set("hourly", "temperature_2m,precipitation");
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error("Falha ao buscar previsão do tempo");
@@ -37,6 +78,11 @@ export async function fetchWeatherForecast(days = 5): Promise<WeatherForecast> {
       precipitation_sum: number[];
       weather_code: number[];
     };
+    hourly: {
+      time: string[];
+      temperature_2m: number[];
+      precipitation: number[];
+    };
   };
 
   const daily = json.daily.time.map((date, i) => ({
@@ -47,7 +93,13 @@ export async function fetchWeatherForecast(days = 5): Promise<WeatherForecast> {
     weatherCode: json.daily.weather_code[i],
   }));
 
-  return { location: "Vitória / região ES", daily };
+  const hourly = json.hourly.time.map((time, i) => ({
+    time,
+    temp: json.hourly.temperature_2m[i],
+    precipitation: json.hourly.precipitation[i],
+  }));
+
+  return { location: locationName, timezone, daily, hourly };
 }
 
 const WEATHER_LABELS: Record<number, string> = {

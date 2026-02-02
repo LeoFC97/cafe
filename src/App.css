@@ -596,6 +596,146 @@
   color: var(--muted);
 }
 
+/* Busca de cidade */
+.weather-search {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.weather-search-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.weather-search-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.weather-search-input::placeholder {
+  color: var(--muted);
+}
+
+.weather-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.weather-search-status {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+.weather-search-results {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  max-width: 320px;
+  z-index: 10;
+}
+
+.weather-search-result-btn {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.weather-search-result-btn:last-child {
+  border-bottom: none;
+}
+
+.weather-search-result-btn:hover {
+  background: rgba(196, 163, 90, 0.1);
+}
+
+.weather-search-result-cc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-left: 0.35rem;
+}
+
+/* Detalhamento por hora */
+.weather-detail-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1.5rem 0 0.35rem;
+}
+
+.weather-detail-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+.weather-hourly-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.weather-hourly {
+  display: flex;
+  gap: 0;
+  min-width: min-content;
+}
+
+.weather-hour {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  min-width: 72px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+
+.weather-hour-time {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.weather-hour-temp {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.weather-hour-precip {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}
+
 @media (max-width: 600px) {
   .app {
     padding: 0.75rem 1rem 2rem;
