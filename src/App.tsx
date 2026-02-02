@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { fetchHomeInformation } from "./api";
-import { usePriceHistory } from "./hooks/usePriceHistory";
-import { PriceChart } from "./components/PriceChart";
 import { WeatherForecast } from "./components/WeatherForecast";
 import { expertsByRegion } from "./data/experts";
 import { partners } from "./data/partners";
@@ -140,10 +138,12 @@ function ExpertCard({
   );
 }
 
-type TabId = "mercado" | "especialistas" | "parceiros";
+type TabId = "mercado" | "clima" | "noticias" | "especialistas" | "parceiros";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "mercado", label: "Mercado" },
+  { id: "clima", label: "Previsão do tempo" },
+  { id: "noticias", label: "Notícias" },
   { id: "especialistas", label: "Contato com especialista" },
   { id: "parceiros", label: "Marcas parceiras" },
 ];
@@ -154,14 +154,12 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("mercado");
   const [scheduleModalExpert, setScheduleModalExpert] = useState<Expert | null>(null);
-  const { history, append } = usePriceHistory();
 
   const load = async () => {
     try {
       setError(null);
       const res = await fetchHomeInformation();
       setData(res);
-      append(res);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro ao carregar");
     } finally {
@@ -173,7 +171,7 @@ export default function App() {
     load();
     const id = setInterval(load, 60_000);
     return () => clearInterval(id);
-  }, [append]);
+  }, []);
 
   if (loading && !data) {
     return (
@@ -232,49 +230,28 @@ export default function App() {
                   ))}
                 </div>
               </section>
-
-              {history.length >= 2 && (
-                <section className="section history">
-                  <h2>Histórico (sessão)</h2>
-                  <p className="history-note">Dados acumulados nesta visita. Atualize a página para ver novos pontos.</p>
-                  <div className="charts">
-                    {data.stocks.filter((s) => s.type === "coffee").map((s) => (
-                      <PriceChart
-                        key={s.symbol}
-                        history={history}
-                        series="stock"
-                        keyId={s.symbol}
-                        label={s.name}
-                        formatValue={(n) => formatPrice(n, 0)}
-                      />
-                    ))}
-                    {data.values.map((v) => (
-                      <PriceChart
-                        key={v.name}
-                        history={history}
-                        series="value"
-                        keyId={v.name}
-                        label={v.name}
-                        formatValue={(n) => `R$ ${formatPrice(n)}`}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              <section className="section messages">
-                <h2>Notícias e alertas</h2>
-                <div className="messages-list">
-                  {data.messages.slice(0, 30).map((m) => (
-                    <MessageItem key={m.id} m={m} />
-                  ))}
-                </div>
-              </section>
             </>
           )}
-
-          <WeatherForecast />
         </>
+      )}
+
+      {activeTab === "clima" && (
+        <WeatherForecast />
+      )}
+
+      {activeTab === "noticias" && (
+        <section className="section messages">
+          <h2>Notícias e alertas</h2>
+          {data ? (
+            <div className="messages-list">
+              {data.messages.slice(0, 30).map((m) => (
+                <MessageItem key={m.id} m={m} />
+              ))}
+            </div>
+          ) : (
+            <p className="weather-loading">Carregando notícias...</p>
+          )}
+        </section>
       )}
 
       {activeTab === "especialistas" && (

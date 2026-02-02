@@ -7,6 +7,11 @@ export interface Partner {
 
 export const partners: Partner[] = [
   {
+    id: "ellepot",
+    name: "Ellepot",
+    url: "https://www.ellepot.com/pt",
+  },
+  {
     id: "parceiro-1",
     name: "Marca Parceira 1",
     logo: "/partners/logo1.png",
