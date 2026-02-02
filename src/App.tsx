@@ -249,8 +249,8 @@ export default function App() {
 
           {data && (
             <>
-              <section className="section values">
-                <h2>Preços físicos (R$/saca)</h2>
+              <section className="section section--highlight values">
+                <h2 className="values-heading">Preços físicos (R$/saca)</h2>
                 <div className="values-grid">
                   {data.values.map((v) => (
                     <ValueCard key={v.name} v={v} />
@@ -374,10 +374,10 @@ export default function App() {
             type="button"
             className="chat-popout-toggle"
             onClick={() => setChatPopoutOpen((o) => !o)}
-            aria-label={chatPopoutOpen ? "Fechar chat" : "Abrir chat"}
+            aria-label={chatPopoutOpen ? "Fechar chat" : "Fale com o especialista"}
             title="Fale com o especialista"
           >
-            {chatPopoutOpen ? "×" : "Chat"}
+            {chatPopoutOpen ? "×" : "Fale com especialista"}
           </button>
         </div>
       )}
