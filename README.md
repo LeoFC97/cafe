@@ -1,0 +1,60 @@
+# Painel do Café
+
+A simple, modern coffee market panel using the same API as [Painel do Café](https://www.paineldocafe.com.br/). Built with Vite + React + TypeScript.
+
+## Features
+
+- **Live quotes**: DÓLAR, LONDRES (Conilon), N.YORK (Arábica) with price and change
+- **Physical prices**: Conilon 7/8 and Arábica RIO (R$/saca)
+- **News & alerts**: Messages feed from the API
+- **Session history**: Prices are stored in `localStorage` on each fetch; mini sparkline charts show recent trend (builds over time as you keep the page open or revisit)
+
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## Build
+
+```bash
+npm run build
+```
+
+## Deploy on Vercel (free)
+
+1. **Push the project to GitHub** (if you haven’t already):
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git push -u origin main
+   ```
+
+2. **Deploy with Vercel**:
+   - Go to [vercel.com](https://vercel.com) and sign in (e.g. with GitHub).
+   - Click **Add New…** → **Project** and import your GitHub repo.
+   - Leave the defaults (Vite is auto-detected; build: `npm run build`, output: `dist`).
+   - Click **Deploy**. Your site will get a URL like `https://your-project.vercel.app`.
+
+   **Or use the CLI:**
+   ```bash
+   npx vercel
+   ```
+   Follow the prompts (log in if needed). To deploy to production:
+   ```bash
+   npx vercel --prod
+   ```
+
+No env vars or extra config are required; the app only calls the public coffee API.
+
+## API
+
+Data is fetched from `https://api.coffee-panel.mitrix.online/api/home/information` (same as paineldocafe.com.br). The app refreshes every 60 seconds.
+
+Historical data is **client-side only**: each time data is fetched, a snapshot is saved to `localStorage`. The “Histórico (sessão)” section shows sparklines for coffee stocks and physical values once at least 2 points exist (e.g. after the second refresh or a revisit).
