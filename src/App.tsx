@@ -59,16 +59,19 @@ function PartnerCard({ partner }: { partner: Partner }) {
   const showLogo = partner.logo && !logoFailed;
   const content = (
     <>
-      {showLogo ? (
-        <img
-          src={partner.logo}
-          alt={partner.name}
-          className="partner-logo"
-          onError={() => setLogoFailed(true)}
-        />
-      ) : (
-        <span className="partner-name">{partner.name}</span>
-      )}
+      <div className="partner-card-header">
+        {showLogo ? (
+          <img
+            src={partner.logo}
+            alt={partner.name}
+            className="partner-logo"
+            onError={() => setLogoFailed(true)}
+          />
+        ) : (
+          <span className="partner-name">{partner.name}</span>
+        )}
+      </div>
+      <p className="partner-description">{partner.description}</p>
     </>
   );
 
