@@ -8,6 +8,7 @@ A simple, modern coffee market panel using the same API as [Painel do Café](htt
 - **Physical prices**: Conilon 7/8 and Arábica RIO (R$/saca)
 - **News & alerts**: Messages feed from the API
 - **Session history**: Prices are stored in `localStorage` on each fetch; mini sparkline charts show recent trend (builds over time as you keep the page open or revisit)
+- **Authenticated area** (login/signup): Track inventory (sacas) for coffee and pepper by harvest season, with analytics dashboards and revenue forecasts
 
 ## Run
 
@@ -17,6 +18,21 @@ npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173).
+
+### Supabase setup (for login and inventory)
+
+1. Create a project at [supabase.com](https://supabase.com) (or use the existing project).
+2. In Supabase Dashboard → **Authentication** → **Providers** → **Email**: disable **Confirm email** for simple signup.
+3. Run the SQL schema in **SQL Editor**:
+   ```bash
+   # Copy contents of supabase/schema.sql and run in Supabase SQL Editor
+   ```
+4. Copy `.env.example` to `.env` and add your keys:
+   ```
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key
+   ```
+   Find the anon key in Supabase Dashboard → **Settings** → **API**.
 
 ## Build
 

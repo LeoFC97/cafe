@@ -1,0 +1,104 @@
+.dashboard-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-logo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dashboard-logo:hover {
+  text-decoration: underline;
+}
+
+.dashboard-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.dashboard-nav-link {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+
+.dashboard-nav-link:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.dashboard-nav-link--active {
+  color: var(--accent);
+  background: rgba(196, 163, 90, 0.12);
+}
+
+.dashboard-nav-link--active:hover {
+  color: var(--accent);
+  background: rgba(196, 163, 90, 0.18);
+}
+
+.dashboard-user {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-user-email {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.dashboard-signout {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.dashboard-signout:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.dashboard-main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
